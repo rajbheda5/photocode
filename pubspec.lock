@@ -130,13 +130,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.12.0"
-  getflutter:
+  getwidget:
     dependency: "direct main"
     description:
-      name: getflutter
+      name: getwidget
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.3"
+    version: "1.2.4"
   highlight:
     dependency: "direct main"
     description:
@@ -245,11 +245,9 @@ packages:
   rich_code_editor:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: fa6b78933fa6197573cb3cfa6f15cce27ead2dac
-      url: "git://github.com/leonzalion/rich_code_editor.git"
-    source: git
+      path: "packages/rich_code_editor"
+      relative: true
+    source: path
     version: "1.0.0"
   sky_engine:
     dependency: transitive

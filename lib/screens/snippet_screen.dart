@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:mobile/constants.dart';
 
 import '../widgets/photo_code_app_bar.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/constants.dart';
 import 'package:mobile/screens/edit_screen.dart';
@@ -30,7 +30,8 @@ class _PhotoScreenState extends State<PhotoScreen> {
         filename: image.path.split('/').last,
       ),
     });
-    var response = await dio.post("https://photo-code-web.herokuapp.com/scan", data: formData);
+    var response = await dio.post("https://photo-code-web.herokuapp.com/scan",
+        data: formData);
     setState(() {
       _image = image;
       _ocrResult = response.data["code"].toString();
@@ -52,7 +53,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
 
   void openEditor() {
     Navigator.pushNamed(
-      context, 
+      context,
       EditScreen.routeName,
       arguments: EditArguments(_ocrResult),
     );
@@ -85,7 +86,9 @@ class _PhotoScreenState extends State<PhotoScreen> {
                 color: Colors.black,
                 borderRadius: BorderRadius.all(Radius.circular(40)),
               ),
-              child: _image != null ? Image.file(_image, fit: BoxFit.contain) : null,
+              child: _image != null
+                  ? Image.file(_image, fit: BoxFit.contain)
+                  : null,
             ),
             Spacer(),
             GFButton(
@@ -94,31 +97,34 @@ class _PhotoScreenState extends State<PhotoScreen> {
               shape: GFButtonShape.pills,
               color: Constants.barBackgroundColor,
               size: GFSize.LARGE,
-              child: Text("Select Image", style: TextStyle(color: Constants.accentColor)),
+              child: Text("Select Image",
+                  style: TextStyle(color: Constants.accentColor)),
             ),
             Spacer(),
             GFButton(
-              onPressed: openEditor, 
+              onPressed: openEditor,
               fullWidthButton: true,
               shape: GFButtonShape.pills,
               color: Constants.barBackgroundColor,
               size: GFSize.LARGE,
-              child: Text("Process Image", style: TextStyle(color: Constants.accentColor)),
+              child: Text("Process Image",
+                  style: TextStyle(color: Constants.accentColor)),
             ),
             Spacer(),
             DropdownButton<String>(
-              value: _selectedLanguage,
-              dropdownColor: Constants.barBackgroundColor,
-              items: <String>['Javascript', 'More coming soon...'].map((String value) {
-                return new DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Constants.accentColor)),
-                );
-              }).toList(),
-              onChanged: (newSelection) {
-                changeLanguage(newSelection); 
-              }
-            ),
+                value: _selectedLanguage,
+                dropdownColor: Constants.barBackgroundColor,
+                items: <String>['Javascript', 'More coming soon...']
+                    .map((String value) {
+                  return new DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value,
+                        style: TextStyle(color: Constants.accentColor)),
+                  );
+                }).toList(),
+                onChanged: (newSelection) {
+                  changeLanguage(newSelection);
+                }),
             Spacer(flex: 4),
           ],
         ),
