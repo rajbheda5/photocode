@@ -94,7 +94,7 @@ class SnippetsScreen extends StatelessWidget {
             children: [
               Text(snippet.name),
               Text(formatDate(
-                DateTime(2020, 05, 23),
+                DateTime(2020, 05, 18),
                 [MM, ' ', d, ', ', yyyy, ' @ ', HH, ':', nn],
               )),
             ],
