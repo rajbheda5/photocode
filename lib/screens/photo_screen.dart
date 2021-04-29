@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/constants.dart';
@@ -16,26 +20,72 @@ class PhotoScreen extends StatefulWidget {
 
 class _PhotoScreenState extends State<PhotoScreen> {
   File _image;
-  String _ocrResult;
 
   String _selectedLanguage = "Javascript";
 
+  Dio dio = new Dio();
+  final imgBBkey = '430884ee402612043810c42ec4bca070';
+  String imgURL = '';
+  String code = '';
+
+  Future<void> uploadImageFile(File _image) async {
+    // ByteData bytes = await rootBundle.load(_image.path);
+    final ByteData bytes = _image.readAsBytesSync().buffer.asByteData();
+    var buffer = bytes.buffer;
+    var m = base64.encode(Uint8List.view(buffer));
+
+    FormData formData =
+        FormData.fromMap({"key": imgBBkey, "image": m, "expiration": 3600});
+
+    final Response response = await dio.post(
+      "https://api.imgbb.com/1/upload",
+      data: formData,
+    );
+    print(response.data['data']['url']);
+
+    imgURL = response.data['data']['url'];
+    if (imgURL != '') {
+      ocrResult(imgURL);
+    }
+  }
+
+  void ocrResult(String url) async {
+    // FormData formData = FormData.fromMap({"url": imgURL});
+    final response = await dio.post(
+      "http://192.168.0.106:8080/OCR",
+      data: {"url": url},
+    );
+    if (response.statusCode == 200) {
+      print('OCR Received');
+      print(response.data);
+      setState(() {
+        code = response.data;
+      });
+    } else
+      code = '';
+  }
+
   Future getImage(ImageSource source, BuildContext context) async {
-    Dio dio = new Dio();
-    var image = await ImagePicker.pickImage(source: source);
-    Navigator.pop(context);
-    FormData formData = new FormData.fromMap({
-      "image": await MultipartFile.fromFile(
-        image.path,
-        filename: image.path.split('/').last,
-      ),
-    });
-    var response = await dio.post("https://photo-code-web.herokuapp.com/scan",
-        data: formData);
+    var input = await ImagePicker.pickImage(source: source);
     setState(() {
-      _image = image;
-      _ocrResult = response.data["code"].toString();
+      _image = File(input.path);
     });
+    await uploadImageFile(_image);
+    //print(code);
+    Navigator.pop(context);
+    // FormData formData = new FormData.fromMap({
+    //   "image": await MultipartFile.fromFile(
+    //     image.path,
+    //     filename: image.path.split('/').last,
+    //   ),
+    // });
+    //var imgBBLink = await dio.post("https://api.imgbb.com/1/upload?expiration=600&key=YOUR_CLIENT_API_KEY" --form "image=R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")
+    // var response = await dio.post("https://photo-code-web.herokuapp.com/scan",
+    //     data: formData);
+    // setState(() {
+    //   _image = image;
+    //   _ocrResult = response.data["code"].toString();
+    // });
   }
 
   void openSheet() {
@@ -55,7 +105,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
     Navigator.pushNamed(
       context,
       EditScreen.routeName,
-      arguments: EditArguments(_ocrResult),
+      arguments: EditArguments(code),
     );
   }
 

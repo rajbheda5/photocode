@@ -2,8 +2,10 @@
     package="com.photocode.demo.photocode">
    <application
         android:label="photocode"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true">
         <activity
+            android:usesCleartextTraffic="true"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
